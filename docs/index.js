@@ -67,7 +67,7 @@ function initCard(id, firstName, lastName, height, weight, fullTeamName){
   let div=document.createElement("div");
   div.className="card";
   div.id=id;
-  div.style="width: 15rem; max-height: 60vh; margin-top:25px";
+  div.style="width: 15rem; max-height: 70vh; margin-top:25px";
   div.appendChild(initFoto(firstName, lastName));
   div.appendChild(initCardBody(id,firstName, lastName, height, weight, fullTeamName));
   return div;
