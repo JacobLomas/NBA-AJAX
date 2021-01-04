@@ -58,7 +58,7 @@ function loadPlayerAvarages(season,id) {
 /* Maquetacion de la carta de cada Jugador */
 function maquetarRespuesta(respuesta){
   respuesta.data.forEach(jugador => {
-    let card=initCard(jugador.id,jugador.first_name, jugador.last_name, jugador.height_feet, jugador.weight_pounds, jugador.team.full_name);
+    let card=initCard(jugador.id,jugador.first_name, jugador.last_name, jugador.height_inches, jugador.weight_pounds, jugador.team.full_name);
     card.appendChild(initModal(jugador.id));
     tablon.appendChild(card);
   });
@@ -141,7 +141,7 @@ function initHeight(height){
   if(height==null)
     li.innerText="Altura: null";
   else
-    li.innerText="Altura: "+Math.round10(height/3.281, -2)+"m";
+    li.innerText="Altura: "+Math.round10(height*25.4, -1)+"m";
   return li;
 }
 function initWeight(weight){
