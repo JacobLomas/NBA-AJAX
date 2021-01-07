@@ -141,7 +141,7 @@ function initHeight(height){
   if(height==null)
     li.innerText="Altura: null";
   else
-    li.innerText="Altura: "+Math.round10(height*25.4, -1)+"cm";
+    li.innerText="Altura: "+height+"feet";
   return li;
 }
 function initWeight(weight){
