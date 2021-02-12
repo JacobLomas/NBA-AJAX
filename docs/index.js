@@ -14,12 +14,12 @@ window.addEventListener("scroll", (e)=>{
    }
 })
 window.onload=()=>{
-  tablon=document.getElementById("tablon");
-  document.getElementById("btnSearch").addEventListener("click", (e)=>{
+  tablon=$('#tablon');
+  $('#btnSearch').click(function (e) { 
     paginaActual=1;
     eliminarTablon();
     loadPlayer();
-  })
+  });
 }
 /* ======================================== */
 
@@ -59,17 +59,15 @@ function loadPlayerAvarages(season,id) {
 function maquetarRespuesta(respuesta){
   respuesta.data.forEach(jugador => {
     let card=initCard(jugador.id,jugador.first_name, jugador.last_name, jugador.height_inches, jugador.weight_pounds, jugador.team.full_name);
-    card.appendChild(initModal(jugador.id));
-    tablon.appendChild(card);
+    card.append(initModal(jugador.id));
+    tablon.append(card);
   });
 }
 function initCard(id, firstName, lastName, height, weight, fullTeamName){
-  let div=document.createElement("div");
-  div.className="card";
-  div.id=id;
-  div.style="width: 15rem; max-height: 90vh; margin-top:25px";
-  div.appendChild(initFoto(firstName, lastName));
-  div.appendChild(initCardBody(id,firstName, lastName, height, weight, fullTeamName));
+  let div=$("<div id='"+id+"' class='card'>");
+  div.css("width: 15rem; max-height: 90vh; margin-top:25px")
+  div.append(initFoto(firstName, lastName));
+  div.append(initCardBody(id,firstName, lastName, height, weight, fullTeamName));
   return div;
 }
 function initFoto(firstName, lastName){
@@ -102,62 +100,48 @@ function initFoto(firstName, lastName){
     var src="https://www.basketball-reference.com/req/202012251/images/players/"+lastName+firstName+"01.jpg";
   //[=====================================================]
 
-  var img=document.createElement("img");
-  /* var src="https://nba-players.herokuapp.com/players/"+lastName+"/"+firstName; */
-  img.src=src;
-  img.className="card-img-top";
-  img.addEventListener("error", (e)=>{
-    e.target.src="./imagenes/alt.png";
+  var img=$("<img src='"+src+"' class='card-img-top'>").on('error',(e)=>{
+    $(this).attr('src','./imagenes/alt.png')
   });
-  img.style.padding="3rem"
-  img.alt="Foto de "+firstName+" "+lastName;
+  img.css('padding', '3rem')
+  /* var src="https://nba-players.herokuapp.com/players/"+lastName+"/"+firstName; */
   return img;
 }
 function initCardBody(id,firstName, lastName, height, weight, fullTeamName){
-  let div=document.createElement("div");
-  div.className="card-body";
-  div.appendChild(initCardBodyTitle(firstName, lastName));
-  div.appendChild(initCardBodyDescription(height, weight, fullTeamName));
-  div.appendChild(initButton(id));
+  let div=$("<div class='card-body'>");
+  div.append(initCardBodyTitle(firstName, lastName));
+  div.append(initCardBodyDescription(height, weight, fullTeamName));
+  div.append(initButton(id));
   return div;
 }
 function initCardBodyTitle(firstName, lastName){
-  var h5=document.createElement("h5");
-  h5.className="card-title";
-  h5.innerText=firstName+" "+lastName;
-  return h5;
+  return $("<h5 class='card-title'>"+firstName+" "+lastName+"</h5>")
 }
 function initCardBodyDescription(height, weight, fullTeamName){
-  var ul=document.createElement("ul");
-  ul.className="list-group list-group-flush";
-  ul.appendChild(initFullTeamName(fullTeamName));
-  ul.appendChild(initHeight(height));
-  ul.appendChild(initWeight(weight));
+  let ul=$("<ul class='list-group list-group-flush'>");
+  ul.append(initFullTeamName(fullTeamName));
+  ul.append(initHeight(height));
+  ul.append(initWeight(weight));
   return ul;  
 }
 function initHeight(height){
-  let li=document.createElement("li");
-  li.className="list-group-item";
+  let li=$("<li class='list-group-item'>");
   if(height==null)
-    li.innerText="Altura: null";
+    li.text("Altura: null");
   else
-    li.innerText="Altura: "+height+"feet";
+    li.text("Altura: "+height+"feet");
   return li;
 }
 function initWeight(weight){
-  let li=document.createElement("li");
-  li.className="list-group-item";
+  let li=$("<li class='list-group-item'>");
   if(weight==null)
-    li.innerText="Peso: null";
+    li.text("Peso: null");
   else
-    li.innerText="Peso: "+Math.round10(weight/2.205,-1)+"kg";
+    li.text("Peso: "+Math.round10(weight/2.205,-1)+"kg");
   return li;
 }
 function initFullTeamName(fullTeamName){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Equipo: "+fullTeamName;
-  return li;
+  return $("<li class='list-group-item'>Equipo: "+fullTeamName+"</li>");
 }
 function initButton(id){
   let button=document.createElement("button");
@@ -182,213 +166,126 @@ function initButton(id){
 
 /* Maquetacion de la ventana modal de cada jugador */
 function initModal(id){
-  let divModal=document.createElement("div");
-  divModal.id="modal"+id;
-  divModal.className="modalContainer";
-  divModal.appendChild(initModalContent(id));
+  let divModal=$("<div id='modal"+id+"' class='modalContainer'>");
+  divModal.append(initModalContent(id));
   return divModal;
 }
 function initModalContent(id){
-  let divModalContent=document.createElement("div");
-  divModalContent.className="modal-content";
-  let button=document.createElement("button");
-  button.type="button";
-  button.className="btn-close close";
-  button.addEventListener("click", (e)=>{
-    e.target.parentNode.parentNode.style.display = "none";
-    document.body.style.position = "inherit";
-    document.body.style.height = "auto";
-    document.body.style.overflow = "visible";
-  })
+  let divModalContent=$("<div class='modal-content'>")
+  let button=$("<button type='button' class='btn-close close'>").click(function(){
+    $(this).parent().parent().css('display', 'none');
+    $('body').css('position', 'inherit');
+    $('body').css('height', 'auto');
+    $('body').css('overflow', 'visible');
+  });
 
-  divModalContent.appendChild(button);
-  divModalContent.appendChild(initSearchAvarages(id));
+  divModalContent.append(button);
+  divModalContent.append(initSearchAvarages(id));
   return divModalContent;
 }
 function initSearchAvarages(id){
-  let div=document.createElement("div");
-  div.className="d-flex";
-  div.style.marginTop="1vh";
-  let input=document.createElement("input");
-  input.className="form-control me-2";
-  input.type="number";
-  input.min="1949";
-  input.max="2020";
-  input.value="2020";
-  input.placeholder="Season ej.:2020";
-  let search=document.createElement("button");
-  search.innerText="Seleccionar Temporada";
-  search.className="btn btn-outline-success";
-  search.addEventListener("click", ()=>{
-    if(div.parentNode.querySelector("ul")){
-      div.parentNode.removeChild(div.parentNode.querySelector("ul"));
+  let div=$("<div class='d-flex' style='margin-top:1vh'></div>");
+  let input=$("<input class='form-control me-2' type='number' min='1949' max='2020' value='2020' placeholder='Season ej.:2020'>");
+  let search=$("<button class='btn btn-outline-success'>Seleccionar Temporada</button>").click((e)=>{
+    if(div.parent().find('ul').length){
+      div.parent().remove(div.parent().find('ul'))
     }
     loadPlayerAvarages(input.value,id);
-
   })
-  div.appendChild(input);
-  div.appendChild(search);
+  div.append(input);
+  div.append(search);
   return div;
 }
+
 function maquetarAvarages(datos){
-let modal=document.getElementById("modal"+datos[0].player_id).getElementsByClassName("modal-content")[0];
-var ul=document.createElement("ul");
-ul.className="list-group list-group-flush";
-ul.style.overflowY="scroll";
-ul.style.maxHeight="50vh";
-ul.style.marginTop="1vh"
-ul.appendChild(initGamesPlayed(datos[0].games_played));
-ul.appendChild(initFGM(datos[0].fgm));
-ul.appendChild(initFGA(datos[0].fga));
-ul.appendChild(initFG3M(datos[0].fg3m));
-ul.appendChild(initFG3A(datos[0].fg3m));
-ul.appendChild(initFTM(datos[0].ftm));
-ul.appendChild(initFTA(datos[0].fta));
-ul.appendChild(initOReb(datos[0].oreb));
-ul.appendChild(initDReb(datos[0].dreb));
-ul.appendChild(initPTS(datos[0].pts));
-ul.appendChild(initAst(datos[0].ast));
-ul.appendChild(initReb(datos[0].reb));
-ul.appendChild(initStl(datos[0].stl));
-ul.appendChild(initBlk(datos[0].blk));
-ul.appendChild(initTurnover(datos[0].turnover));
-ul.appendChild(initPF(datos[0].pf));
-ul.appendChild(initFG_pct(datos[0].fg_pct));
-ul.appendChild(initFG3_pct(datos[0].fg3_pct));
-ul.appendChild(initFT_pct(datos[0].ft_pct));
-modal.appendChild(ul);
+let modal=$("#modal"+datos[0].player_id).find(".modal-content")
+var ul=$("<ul class='list-group list-group-flush' style='overflow-y:scroll;max-height:50vh; margint-top:1vh;'>")
+ul.append(initGamesPlayed(datos[0].games_played));
+ul.append(initFGM(datos[0].fgm));
+ul.append(initFGA(datos[0].fga));
+ul.append(initFG3M(datos[0].fg3m));
+ul.append(initFG3A(datos[0].fg3m));
+ul.append(initFTM(datos[0].ftm));
+ul.append(initFTA(datos[0].fta));
+ul.append(initOReb(datos[0].oreb));
+ul.append(initDReb(datos[0].dreb));
+ul.append(initPTS(datos[0].pts));
+ul.append(initAst(datos[0].ast));
+ul.append(initReb(datos[0].reb));
+ul.append(initStl(datos[0].stl));
+ul.append(initBlk(datos[0].blk));
+ul.append(initTurnover(datos[0].turnover));
+ul.append(initPF(datos[0].pf));
+ul.append(initFG_pct(datos[0].fg_pct));
+ul.append(initFG3_pct(datos[0].fg3_pct));
+ul.append(initFT_pct(datos[0].ft_pct));
+modal.append(ul);
 
 }
 function initGamesPlayed(gamesPlayed){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Partidos jugados: "+gamesPlayed;
-  return li;
+  return $("<li class='list-group-item>Partidos jugados: "+gamesPlayed+"</li>")
 }
 function initFGM(fgm){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FGM: "+fgm;
-  li.title="Field goal matter";
-  return li;
+  return $("<li class='list-group-item title='Field goal matter'>FGM: "+fgm+"</li>")
 }
 function initFGA(fga){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FGA: "+fga;
-  li.title="Field goal attemted";
-  return li;
+  return $("<li class='list-group-item title='Field goal attemted'>FGA: "+fga+"</li>")
 }
 function initFG3M(fg3m){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FG3M: "+fg3m;
-  li.title="Field 3pt goal matter";
-  return li;
+  return $("<li class='list-group-item title='Field goal 3pt matter'>FG3M: "+fg3m+"</li>")
 }
 function initFG3A(fg3a){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FG3A: "+fg3a;
-  li.title="Field 3pt goal attemted";
-  return li;
+  return $("<li class='list-group-item title='Field 3pt goal attemted'>FG3A: "+fg3a+"</li>") 
 }
 function initFTM(ftm){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FTM: "+ftm;
-  li.title="Free trows matter";
-  return li;
+  return $("<li class='list-group-item title='Free trows matter'>FTM: "+ftm+"</li>")
 }
 function initFTA(fta){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FTA: "+fta;
-  li.title="Free trows attemted";
-  return li;
+  return $("<li class='list-group-item title='Field trows attemted'>FTA: "+fta+"</li>")
 }
 function initOReb(oreb){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Offensive Reb.: "+oreb;
-  return li;
+  return $("<li class='list-group-item>Offensive Reb.: "+oreb+"</li>")
 }
 function initDReb(dreb){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Deffensive Reb.: "+dreb;
-  return li;
+  return $("<li class='list-group-item>Deffensive Reb.: "+dreb+"</li>")
 }
 function initReb(reb){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Rebounds: "+reb;
-  return li;
+  return $("<li class='list-group-item>Rebounds: "+oreb+"</li>")
 }
 function initAst(ast){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Assist: "+ast;
-  return li;
+  return $("<li class='list-group-item>Assist: "+ast+"</li>")
 }
 function initStl(stl){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Steels: "+stl;
-  return li;
+  return $("<li class='list-group-item>Steels: "+stl+"</li>")
 }
 function initBlk(blk){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Block: "+blk;
-  return li;
+  return $("<li class='list-group-item>Block: "+blk+"</li>")
 }
 function initTurnover(trno){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Turnovers: "+trno;
-  return li;
+  return $("<li class='list-group-item>Turnovers: "+trno+"</li>")
 }
 function initPF(pf){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Personal Fouls: "+pf;
-  li.title="PF, PagaFantas";
-  return li;
+  return $("<li class='list-group-item>Personal Fouls: "+pf+"</li>")
 }
 function initPTS(pts){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="Points per game: "+pts;
-  return li;
+  return $("<li class='list-group-item>Points per game: "+pts+"</li>")
 }
 function initFG_pct(fg_p){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FG%: "+(fg_p*100)+"%";
-  li.title="Field Goal %";
-  return li;
+  return $("<li class='list-group-item>Field Goal %: "+(fg_p*100)+"%</li>")
 }
 function initFG3_pct(fg3_p){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FG3%: "+(fg3_p*100)+"%";
-  li.title="Field 3pt Goal %";
-  return li;
+  return $("<li class='list-group-item>Field 3pt Goal %: "+(fg3_p*100)+"%</li>")
 }
 function initFT_pct(ft_p){
-  let li=document.createElement("li");
-  li.className="list-group-item";
-  li.innerText="FT%: "+(ft_p*100)+"%";
-  li.title="Free Trows %";
-  return li;
+  return $("<li class='list-group-item>Free trows %: "+(ft_p*100)+"%</li>")
+
 }
 /* ====================================== */
 
 
 /* Funcion auxiliar */
 function eliminarTablon(){
-  tablon.innerHTML="";
+  tablon.find('*').remove()
 }
 /* ================ */
 
